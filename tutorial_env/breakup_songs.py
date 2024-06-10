@@ -8,6 +8,10 @@ import os
 # configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# set up credentials
+spotify_client_id = '62675215c6744e379289fe777b01a02f'
+spotify_client_secret = 'b4437aac85b04594bacca57b94a87ea9'
+
 # authentication
 auth_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(auth_manager=auth_manager)
@@ -126,8 +130,7 @@ except OSError as e:
     print(f"Directory exists")
 
 with open("../data/" + csv_file, mode='w', newline='', encoding='utf-8') as file:
-    writer = csv.DictWriter(file, fieldnames=['track_name', 'track_id', 'album_name', 'album_id', 'artist_name', 'artist_id', 'track_popularity', 'explicit', 'track_url','danceability', 'energy', 'key',
-        'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'])
+    writer = csv.DictWriter(file, fieldnames=['track_name', 'track_id', 'album_name', 'album_id', 'artist_name', 'artist_id', 'track_popularity', 'explicit', 'track_url','danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'])
     writer.writeheader()
     writer.writerows(all_tracks_metadata)
 

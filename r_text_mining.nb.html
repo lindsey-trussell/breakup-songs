@@ -1755,9 +1755,23 @@ language processing</h1>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHRpZHl0ZXh0KVxubGlicmFyeSh0ZXh0Y2xlYW4pXG5saWJyYXJ5KGRwbHlyKVxuXG5icmVha3VwX2RhdGFfcmF3IDwtIHJlYWQuY3N2KFwiLi9kYXRhL2JyZWFrdXBfdHJhY2tzX21ldGFkYXRhLmNzdlwiKVxuXG5icmVha3VwX3NvbmdfY291bnQgPC0gYnJlYWt1cF9kYXRhX3JhdyAlPiUgZ3JvdXBfYnkodHJhY2tfaWQpICU+JSBtdXRhdGUoY291bnQgPSBuKCkpICU+JSB1bmlxdWUoKVxuXG5zb25nX2lkcyA8LSBicmVha3VwX3NvbmdfY291bnQgJT4lIHNlbGVjdCh0cmFja19pZCwgdHJhY2tfbmFtZSwgdHJhY2tfdXJsKVxud3JpdGUuY3N2KHNvbmdfaWRzLCBcIi4vZGF0YS9zb25nX2lkcy5jc3ZcIilcblxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse)
+library(tidytext)
+library(textclean)
+library(dplyr)
+
+breakup_data_raw &lt;- read.csv(&quot;./data/breakup_tracks_metadata.csv&quot;)
+
+breakup_song_count &lt;- breakup_data_raw %&gt;% group_by(track_id) %&gt;% mutate(count = n()) %&gt;% unique()
+
+song_ids &lt;- breakup_song_count %&gt;% select(track_id, track_name, track_url)
+write.csv(song_ids, &quot;./data/song_ids.csv&quot;)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiciBub3RlYm9vayBmb3IgYnJlYWt1cCBzb25nIG5hdHVyYWwgbGFuZ3VhZ2UgcHJvY2Vzc2luZyIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KYGBg</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiciBub3RlYm9vayBmb3IgYnJlYWt1cCBzb25nIG5hdHVyYWwgbGFuZ3VhZ2UgcHJvY2Vzc2luZyIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkodGlkeXRleHQpCmxpYnJhcnkodGV4dGNsZWFuKQpsaWJyYXJ5KGRwbHlyKQoKYnJlYWt1cF9kYXRhX3JhdyA8LSByZWFkLmNzdigiLi9kYXRhL2JyZWFrdXBfdHJhY2tzX21ldGFkYXRhLmNzdiIpCgpicmVha3VwX3NvbmdfY291bnQgPC0gYnJlYWt1cF9kYXRhX3JhdyAlPiUgZ3JvdXBfYnkodHJhY2tfaWQpICU+JSBtdXRhdGUoY291bnQgPSBuKCkpICU+JSB1bmlxdWUoKQoKc29uZ19pZHMgPC0gYnJlYWt1cF9zb25nX2NvdW50ICU+JSBzZWxlY3QodHJhY2tfaWQsIHRyYWNrX25hbWUsIHRyYWNrX3VybCwgYXJ0aXN0X25hbWUsIGFydGlzdF9pZCkKd3JpdGUuY3N2KHNvbmdfaWRzLCAiLi9kYXRhL3NvbmdfaWRzLmNzdiIpCgpgYGAK</div>
 
 
 
