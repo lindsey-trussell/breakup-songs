@@ -1,6 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import csv
+import random
 
 # authentication
 auth_manager = SpotifyClientCredentials()
@@ -9,7 +10,7 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 # setting up keywords and limits
 keywords = ["breakup", "break up", "heartbreak"]
 limit = 50
-total_results = 10
+total_results = 20
 
 # search for playlists by word
 def search_playlists_by_keyword(word, limit, total_results):
@@ -41,12 +42,24 @@ def get_playlist_tracks(playlist_id):
             results = None
     return tracks
 
+# get audio features for tracks
+def get_audio_features(track_ids):
+    features = {}
+    for i in range(0, len(track_ids), 100):
+        batch = track_ids[i:i + 100]
+        results = sp.audio_features(batch)
+        features.update({feature['id']: feature for feature in results if feature})
+    return features
+
 #get metadata from tracks
 def get_track_metadata(tracks):
     track_data = []
+    track_ids = [item['track']['id'] for item in tracks if item['track']]
+    audio_features = get_audio_features(track_ids)
     for item in tracks:
         track = item['track']
         if track: # some items may be null
+            features = audio_features.get(track['id'], {})
             track_info = {
                 'track_name': track.get('name', 'N/A'),
                 'track_id': track.get('id', 'N/A'),
@@ -56,7 +69,19 @@ def get_track_metadata(tracks):
                 'artist_id': track['artists'][0].get('id', 'N/A') if track.get('artists') else 'N/A',
                 'track_popularity': track.get('popularity', 'N/A'),
                 'explicit' : track.get('explicit', False),
-                'track_url': track['external_urls'].get('spotify', 'N/A') if track.get('external_urls') else 'N/A'
+                'track_url': track['external_urls'].get('spotify', 'N/A') if track.get('external_urls') else 'N/A',
+                'danceability': features.get('danceability', 'N/A'),
+                'energy': features.get('energy', 'N/A'),
+                'key': features.get('key', 'N/A'),
+                'loudness': features.get('loudness', 'N/A'),
+                'mode': features.get('mode', 'N/A'),
+                'speechiness': features.get('speechiness', 'N/A'),
+                'acousticness': features.get('acousticness', 'N/A'),
+                'instrumentalness': features.get('instrumentalness', 'N/A'),
+                'liveness': features.get('liveness', 'N/A'),
+                'valence': features.get('valence', 'N/A'),
+                'tempo': features.get('tempo', 'N/A'),
+                
             }
             track_data.append(track_info)
     return track_data
@@ -65,6 +90,10 @@ def get_track_metadata(tracks):
 all_playlists = []
 for word in keywords:
     all_playlists.extend(search_playlists_by_keyword(word, limit, total_results))
+
+# randomly pick 50 playlists
+if len(all_playlists) > 50:
+    all_playlists = random.sample(all_playlists, 50)
 
 # print playlist query results
 print(f"playlists:")
@@ -81,10 +110,11 @@ for playlist in all_playlists:
     track_metadata = get_track_metadata(tracks)
     all_tracks_metadata.extend(track_metadata)
 
-# write track metadata into csv file to perform text mining
+# write track metadata into csv file to perform data mining
 csv_file = 'breakup_tracks_metadata.csv'
 with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
-    writer = csv.DictWriter(file, fieldnames=['track_name', 'track_id', 'album_name', 'album_id', 'artist_name', 'artist_id', 'track_popularity', 'explicit', 'track_url'])
+    writer = csv.DictWriter(file, fieldnames=['track_name', 'track_id', 'album_name', 'album_id', 'artist_name', 'artist_id', 'track_popularity', 'explicit', 'track_url','danceability', 'energy', 'key',
+        'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'])
     writer.writeheader()
     writer.writerows(all_tracks_metadata)
 
