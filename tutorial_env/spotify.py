@@ -2,6 +2,11 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import csv
 import random
+import logging
+import os
+
+# configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # authentication
 auth_manager = SpotifyClientCredentials()
@@ -47,8 +52,11 @@ def get_audio_features(track_ids):
     features = {}
     for i in range(0, len(track_ids), 100):
         batch = track_ids[i:i + 100]
-        results = sp.audio_features(batch)
-        features.update({feature['id']: feature for feature in results if feature})
+        try:
+            results = sp.audio_features(batch)
+            features.update({feature['id']: feature for feature in results if feature})
+        except Exception as e:
+            logging.error(f"error getting audio features for batch at index {i}: {e}")
     return features
 
 #get metadata from tracks
@@ -112,7 +120,12 @@ for playlist in all_playlists:
 
 # write track metadata into csv file to perform data mining
 csv_file = 'breakup_tracks_metadata.csv'
-with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
+try:
+    os.mkdir("./data")
+except OSError as e:
+    print(f"Directory exists")
+
+with open("../data/" + csv_file, mode='w', newline='', encoding='utf-8') as file:
     writer = csv.DictWriter(file, fieldnames=['track_name', 'track_id', 'album_name', 'album_id', 'artist_name', 'artist_id', 'track_popularity', 'explicit', 'track_url','danceability', 'energy', 'key',
         'loudness', 'mode', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'])
     writer.writeheader()
