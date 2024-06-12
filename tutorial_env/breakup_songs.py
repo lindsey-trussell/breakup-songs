@@ -93,7 +93,6 @@ def get_track_metadata(tracks):
                 'liveness': features.get('liveness', 'N/A'),
                 'valence': features.get('valence', 'N/A'),
                 'tempo': features.get('tempo', 'N/A'),
-                
             }
             track_data.append(track_info)
     return track_data

@@ -12,7 +12,7 @@ breakup_data_raw <- read.csv("./data/breakup_tracks_metadata.csv")
 
 breakup_song_count <- breakup_data_raw %>% group_by(track_id) %>% mutate(count = n()) %>% unique()
 
-song_ids <- breakup_song_count %>% select(track_id, track_name, track_url, artist_name, artist_id)
+song_ids <- breakup_song_count %>% select(track_id, track_name, track_url, artist_name, artist_id) %>% unique()
 write.csv(song_ids, "./data/song_ids.csv")
 
 ```
